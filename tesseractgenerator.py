@@ -123,10 +123,28 @@ def animate_tesseract(speed, loop):
 def export_animation(output_dir, frame_range):
     if not os.path.exists(output_dir):
         os.makedirs(output_dir)
+    
+    # Loop through each frame in the range
     for frame in range(frame_range[0], frame_range[1] + 1):
-        cmds.currentTime(frame)
-        cmds.refresh()
-        cmds.playblast(frame=frame, format="image", filename=os.path.join(output_dir, "frame_"), compression="png", quality=100, width=1920, height=1080)
+        cmds.currentTime(frame)  # Set the current frame
+        cmds.refresh()  # Refresh the viewport
+        # Save the frame as an image
+        frame_file = os.path.join(output_dir, f"frame_{frame:04d}.png")
+        cmds.playblast(
+            format="image",
+            filename=frame_file,
+            compression="png",
+            quality=100,
+            width=1920,
+            height=1080,
+            frame=frame,
+            showOrnaments=False,
+            viewer=False,
+            offScreen=True
+        )
+        print(f"Exported frame {frame} to {frame_file}")
+    
+    print(f"Animation exported to {output_dir}")
 
 # Function to create the GUI
 def create_gui():
